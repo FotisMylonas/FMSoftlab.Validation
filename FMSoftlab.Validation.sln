@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11201.2 d18.0
+VisualStudioVersion = 18.0.11201.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSoftlab.Validation", "FMSoftlab.Validation\FMSoftlab.Validation.csproj", "{D29C13C4-2F64-3FC3-6032-DB0EC8FEDCAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSoftlab.Validation.UnitTests", "FMSoftlab.Validation.UnitTests\FMSoftlab.Validation.UnitTests.csproj", "{B6AE929D-D7AC-4B5F-B66B-E153DB63092D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{D29C13C4-2F64-3FC3-6032-DB0EC8FEDCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D29C13C4-2F64-3FC3-6032-DB0EC8FEDCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D29C13C4-2F64-3FC3-6032-DB0EC8FEDCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6AE929D-D7AC-4B5F-B66B-E153DB63092D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6AE929D-D7AC-4B5F-B66B-E153DB63092D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6AE929D-D7AC-4B5F-B66B-E153DB63092D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6AE929D-D7AC-4B5F-B66B-E153DB63092D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
