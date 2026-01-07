@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -127,9 +128,9 @@ namespace FMSoftlab.Validation
             }
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -156,9 +157,9 @@ namespace FMSoftlab.Validation
             });
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
         {
@@ -193,9 +194,9 @@ namespace FMSoftlab.Validation
             return result;
         }
 
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
         {
@@ -272,9 +273,9 @@ namespace FMSoftlab.Validation
 
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
         {
@@ -311,7 +312,7 @@ namespace FMSoftlab.Validation
             _maxLength = maxLength;
         }
 
-        public override ValidationResult Validate(T instance, string propertyName, object value)
+        public override ValidationResult Validate(T instance, string propertyName, object? value)
         {
             var result = new ValidationResult();
 
@@ -327,9 +328,9 @@ namespace FMSoftlab.Validation
             }
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -363,9 +364,9 @@ namespace FMSoftlab.Validation
             }
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -399,9 +400,9 @@ namespace FMSoftlab.Validation
             }
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -435,9 +436,9 @@ namespace FMSoftlab.Validation
             }
             return result;
         }
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -470,9 +471,9 @@ namespace FMSoftlab.Validation
             return result;
         }
 
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -511,9 +512,9 @@ namespace FMSoftlab.Validation
             return result;
         }
 
-        public override async Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
+        public override Task<ValidationResult> ValidateAsync(T instance, string propertyName, object? value)
         {
-            return await Task.FromResult(Validate(instance, propertyName, value));
+            return Task.FromResult(Validate(instance, propertyName, value));
         }
 
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -609,7 +610,6 @@ namespace FMSoftlab.Validation
                     result.Messages.Add(message);
                 }
             }
-
             return result;
         }
         protected override string GetDefaultMessage(T instance, string propertyName, object? value)
@@ -761,13 +761,13 @@ namespace FMSoftlab.Validation
             return this;
         }
 
-        public PropertyValidationRules<T> Must(Func<T, object, bool> predicate, string? message = null)
+        public PropertyValidationRules<T> Must(Func<T, object?, bool> predicate, string? message = null)
         {
             _rules.Add(new CustomRule<T>(predicate, message));
             return this;
         }
 
-        public PropertyValidationRules<T> MustAsync(Func<T, object, Task<bool>> asyncPredicate, string message = null)
+        public PropertyValidationRules<T> MustAsync(Func<T, object?, Task<bool>> asyncPredicate, string? message = null)
         {
             _rules.Add(new AsyncCustomRule<T>(asyncPredicate, message));
             return this;
@@ -836,7 +836,7 @@ namespace FMSoftlab.Validation
 
             return result;
         }
-        internal async Task<ValidationResult> ValidateAsync(T instance, object value)
+        internal async Task<ValidationResult> ValidateAsync(T instance, object? value)
         {
             var result = new ValidationResult();
 
@@ -890,8 +890,8 @@ namespace FMSoftlab.Validation
                 object? propertyValue = GetPropertyValue(instance, propertyName);
                 //if (propertyValue != null)
                 //{
-                    var propertyResult = rules.Validate(instance, propertyValue);
-                    result.Messages.AddRange(propertyResult.Messages);
+                var propertyResult = rules.Validate(instance, propertyValue);
+                result.Messages.AddRange(propertyResult.Messages);
                 //}
             }
 
@@ -912,11 +912,11 @@ namespace FMSoftlab.Validation
                 var rules = kvp.Value;
 
                 var propertyValue = GetPropertyValue(instance, propertyName);
-                if (propertyValue != null)
-                {
-                    var propertyResult = await rules.ValidateAsync(instance, propertyValue);
-                    result.Messages.AddRange(propertyResult.Messages);
-                }
+                //if (propertyValue != null)
+                //{
+                var propertyResult = await rules.ValidateAsync(instance, propertyValue);
+                result.Messages.AddRange(propertyResult.Messages);
+                //}
             }
 
             foreach (var rule in _modelRules)
@@ -953,7 +953,7 @@ namespace FMSoftlab.Validation
     // Validation registry for managing validators
     public static class ValidationRegistry
     {
-        private static readonly Dictionary<Type, object> _validators = new Dictionary<Type, object>();
+        private static readonly ConcurrentDictionary<Type, object> _validators = new ConcurrentDictionary<Type, object>();
 
         public static void RegisterValidator<T>(IValidator<T> validator)
         {
