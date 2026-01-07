@@ -19,12 +19,25 @@
 
 
     // Usage example:
-    
+
     public class ContactInfo
     {
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public string? Mobile { get; set; }
+    }
+
+    public class ContactInfo2
+    {
+        public bool? HasMail { get; set; }
+        public bool? HasPhone { get; set; }
+        public bool? HasMobile { get; set; }
+        public ContactInfo2()
+        {
+            HasMail = null;
+            HasPhone = null;
+            HasMobile = null;
+        }
     }
 
 
@@ -39,7 +52,7 @@
                 .Property(x => x.Mobile)
                 .WithMessage("Please provide at least one contact method");
         }
-    }    
+    }
 
 
     public class UnitTest1
@@ -66,6 +79,39 @@
             var result2 = await val.ValidateAsync(info2);
             Assert.True(result2.IsValid);
         }
+
+        [Fact]
+        public async Task AtLeastOneBooleanProperty_AllNulls_Invalid()
+        {
+            var validator = new Validator<ContactInfo2>();
+            validator.AtLeastOneOf()
+                     .Property(x => x.HasMail)
+                     .Property(x => x.HasMobile)
+                     .Property(x => x.HasPhone)
+                     .WithMessage("Please provide at least one contact method");
+            var info = new ContactInfo2();
+            var result = await validator.ValidateAsync(info);
+            Assert.False(result.IsValid);
+            Console.WriteLine(result.Errors[0].Message);
+        }
+
+        [Fact]
+        public async Task AtLeastOneBooleanProperty_Valid()
+        {
+            var validator = new Validator<ContactInfo2>();
+            validator.AtLeastOneOf()
+                     .Property(x => x.HasMail)
+                     .Property(x => x.HasMobile)
+                     .Property(x => x.HasPhone)
+                     .WithMessage("Please provide at least one contact method");
+            var info = new ContactInfo2
+            {
+                HasMail = true
+            };
+            var result = await validator.ValidateAsync(info);
+            Assert.True(result.IsValid);
+        }
+
 
         [Fact]
         public void RequiredRule_WithoutWhen_IsAlwaysExecuted()
