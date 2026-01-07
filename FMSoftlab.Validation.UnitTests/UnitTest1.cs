@@ -18,8 +18,55 @@
     }
 
 
+    // Usage example:
+    
+    public class ContactInfo
+    {
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? Mobile { get; set; }
+    }
+
+
+    // Better approach - add a method to Validator<T>:
+    public class ContactInfoValidator : Validator<ContactInfo>
+    {
+        public ContactInfoValidator()
+        {
+            AtLeastOneOf()
+                .Property(x => x.Email)
+                .Property(x => x.Phone)
+                .Property(x => x.Mobile)
+                .WithMessage("Please provide at least one contact method");
+        }
+    }    
+
+
     public class UnitTest1
     {
+        [Fact]
+        public async Task AtLeastOnePropertyHasValue()
+        {
+            ContactInfoValidator val = new ContactInfoValidator();
+            var info = new ContactInfo
+            {
+                Email = null,
+                Phone = null,
+                Mobile = null
+            };
+            var result = await val.ValidateAsync(info);
+            Assert.False(result.IsValid);
+            Console.WriteLine(result.Errors[0].Message);
+            var info2 = new ContactInfo
+            {
+                Email = "fotismylonas@nowhere.com",
+                Phone = null,
+                Mobile = null
+            };
+            var result2 = await val.ValidateAsync(info2);
+            Assert.True(result2.IsValid);
+        }
+
         [Fact]
         public void RequiredRule_WithoutWhen_IsAlwaysExecuted()
         {

@@ -948,6 +948,12 @@ namespace FMSoftlab.Validation
         {
             return new ModelRuleBuilder<T>(_modelRules);
         }
+        public AtLeastOneRule<T> AtLeastOneOf()
+        {
+            var rule = new AtLeastOneRule<T>();
+            _modelRules.Add(rule);
+            return rule;
+        }
     }
 
     // Validation registry for managing validators
