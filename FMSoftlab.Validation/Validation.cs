@@ -864,6 +864,7 @@ namespace FMSoftlab.Validation
     {
         private readonly Dictionary<string, PropertyValidationRules<T>> _propertyRules =
             new Dictionary<string, PropertyValidationRules<T>>();
+        private readonly List<IModelValidationRule<T>> _modelRules = new List<IModelValidationRule<T>>();
 
         public PropertyValidationRules<T> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression)
         {
@@ -893,6 +894,12 @@ namespace FMSoftlab.Validation
                     result.Messages.AddRange(propertyResult.Messages);
                 //}
             }
+
+            foreach (var rule in _modelRules)
+            {
+                var ruleResult = rule.Validate(instance);
+                result.Messages.AddRange(ruleResult.Messages);
+            }
             return result;
         }
         public async Task<ValidationResult> ValidateAsync(T instance)
@@ -911,9 +918,15 @@ namespace FMSoftlab.Validation
                     result.Messages.AddRange(propertyResult.Messages);
                 }
             }
+
+            foreach (var rule in _modelRules)
+            {
+                var ruleResult = await rule.ValidateAsync(instance);
+                result.Messages.AddRange(ruleResult.Messages);
+            }
+
             return result;
         }
-
 
         private string GetPropertyName<TProperty>(Expression<Func<T, TProperty>> expression)
         {
@@ -929,6 +942,11 @@ namespace FMSoftlab.Validation
         {
             var property = typeof(T).GetProperty(propertyName);
             return property?.GetValue(instance);
+        }
+
+        public ModelRuleBuilder<T> Rule()
+        {
+            return new ModelRuleBuilder<T>(_modelRules);
         }
     }
 

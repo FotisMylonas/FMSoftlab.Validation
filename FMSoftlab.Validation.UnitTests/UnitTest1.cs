@@ -9,6 +9,15 @@
         public bool IsExternal { get; set; }
     }
 
+    public class Order
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool IsDraft { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+
     public class UnitTest1
     {
         [Fact]
@@ -160,6 +169,89 @@
             var result = validator.Validate(person);
 
             Assert.True(result.IsValid); // both rules skipped
+        }
+
+
+
+        [Fact]
+        public void ModelRule_Must_CreatesError_WhenPredicateFails()
+        {
+            var validator = new Validator<Order>();
+
+            validator.Rule()
+                .Must(o => o.StartDate <= o.EndDate)
+                .WithMessage("StartDate must be before EndDate")
+                .ForProperty("EndDate");
+
+            var order = new Order
+            {
+                StartDate = DateTime.Today.AddDays(1),
+                EndDate = DateTime.Today
+            };
+
+            var result = validator.Validate(order);
+
+            Assert.False(result.IsValid);
+            Assert.Single(result.Errors);
+            Assert.Equal("EndDate", result.Errors[0].PropertyName);
+            Assert.Equal("StartDate must be before EndDate", result.Errors[0].Message);
+        }
+
+        [Fact]
+        public void ModelRule_WithWhenCondition_IsSkipped_WhenConditionIsFalse()
+        {
+            var validator = new Validator<Order>();
+
+            validator.Rule()
+                .Must(o => o.StartDate <= o.EndDate)
+                .When(o => !o.IsDraft)
+                .WithMessage("Invalid date range");
+
+            var draftOrder = new Order
+            {
+                StartDate = DateTime.Today.AddDays(5),
+                EndDate = DateTime.Today,
+                IsDraft = true
+            };
+
+            var result = validator.Validate(draftOrder);
+
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Messages);
+        }
+
+        [Fact]
+        public async Task AsyncModelRule_RespectsWhenCondition()
+        {
+            var validator = new Validator<Order>();
+
+            validator.Rule()
+                .MustAsync(async o =>
+                {
+                    await Task.Delay(10);
+                    return o.EndDate >= DateTime.Today;
+                })
+                .When(o => o.IsActive)
+                .WithMessage("EndDate cannot be in the past");
+
+            var inactiveOrder = new Order
+            {
+                EndDate = DateTime.Today.AddDays(-1),
+                IsActive = false
+            };
+
+            var activeOrder = new Order
+            {
+                EndDate = DateTime.Today.AddDays(-1),
+                IsActive = true
+            };
+
+            var inactiveResult = await validator.ValidateAsync(inactiveOrder);
+            var activeResult = await validator.ValidateAsync(activeOrder);
+
+            Assert.True(inactiveResult.IsValid);     // skipped
+            Assert.False(activeResult.IsValid);      // executed
+            Assert.Single(activeResult.Errors);
         }
 
     }
