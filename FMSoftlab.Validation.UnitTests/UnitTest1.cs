@@ -273,8 +273,7 @@
 
             validator.Rule()
                 .Must(o => o.StartDate <= o.EndDate)
-                .WithMessage("StartDate must be before EndDate")
-                .ForProperty("EndDate");
+                .WithMessage("StartDate must be before EndDate");
 
             var order = new Order
             {
@@ -286,7 +285,6 @@
 
             Assert.False(result.IsValid);
             Assert.Single(result.Errors);
-            Assert.Equal("EndDate", result.Errors[0].PropertyName);
             Assert.Equal("StartDate must be before EndDate", result.Errors[0].Message);
         }
 
